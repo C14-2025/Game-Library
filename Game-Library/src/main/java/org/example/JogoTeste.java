@@ -1,6 +1,6 @@
-package br.inatel.test;
+package org.example.test;
 
-import br.inatel.Jogo;
+import org.example.Jogo;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
