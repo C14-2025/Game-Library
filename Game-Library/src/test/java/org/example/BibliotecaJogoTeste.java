@@ -55,8 +55,7 @@ public class BibliotecaJogoTeste {
         assertEquals(2, lista.size());
         assertTrue(lista.contains(jogo1));
         assertTrue(lista.contains(jogo2));
-}
-
+    }
 
     @Test(expected = IllegalArgumentException.class)
     public void testeAdicionarJogoDuplicadoLancaExcecao() {
