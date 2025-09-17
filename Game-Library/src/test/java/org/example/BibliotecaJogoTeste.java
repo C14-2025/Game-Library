@@ -91,7 +91,7 @@ public class BibliotecaJogoTeste {
         bibliotecaJogo.importarDeJson(arquivoTemp.toString()); //passa o json para uma string
 
         assertEquals(1, bibliotecaJogo.obterTamanho());
-        assertEquals("The Witcher 3", bibliotecaJogo.listarJogos().get(0).getNome()); //Verifica o primeiro índice da lista
+        assertEquals("The Witcher 3", bibliotecaJogo.listarJogos().getFirst().getNome()); //Verifica o primeiro índice da lista
 
         // apaga o arquivo depois da execução do teste
         Files.deleteIfExists(arquivoTemp);
