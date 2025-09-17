@@ -21,10 +21,8 @@ public class BibliotecaJogo {
     public boolean listaVazia(){
         return jogos.isEmpty();
     }
-
-    public void adicionarJogo(Jogo jogo) {
-        boolean existe = jogos.stream()
-        .anyMatch(j -> j.getNome().equalsIgnoreCase(jogo.getNome()));
+    public void adicionarJogo(Jogo jogo){
+        boolean existe = jogos.stream().anyMatch(j -> j.getNome().equalsIgnoreCase(jogo.getNome()));
         if (existe) {
             throw new IllegalArgumentException("O jogo '" + jogo.getNome() + "' já existe na biblioteca.");
         }
