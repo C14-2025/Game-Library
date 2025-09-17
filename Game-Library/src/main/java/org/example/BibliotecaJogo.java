@@ -21,7 +21,6 @@ public class BibliotecaJogo {
     public boolean listaVazia(){
         return jogos.isEmpty();
     }
-
     public void adicionarJogo(Jogo jogo){
         boolean existe = jogos.stream().anyMatch(j -> j.getNome().equalsIgnoreCase(jogo.getNome()));
         if (existe) {

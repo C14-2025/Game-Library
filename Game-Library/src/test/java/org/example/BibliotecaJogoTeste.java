@@ -55,7 +55,7 @@ public class BibliotecaJogoTeste {
         BibliotecaJogo bibliotecaJogo = new BibliotecaJogo();
         Jogo jogo1 = new Jogo("Astro Bot", "06/07/2024", "Plataforma", 30);
         Jogo jogo2 = new Jogo("Expedition 33", "24/04/2025", "RPG", 100);
-
+      
         bibliotecaJogo.adicionarJogo(jogo1);
         bibliotecaJogo.adicionarJogo(jogo2);
         List<Jogo> lista = bibliotecaJogo.listarJogos();
@@ -77,7 +77,7 @@ public class BibliotecaJogoTeste {
         assertEquals(0, bibliotecaJogo.obterTamanho());
         assertTrue(bibliotecaJogo.listaVazia());
     }
-
+  
     @Test
     public void testeExportarParaJson_listaVazia(){
         BibliotecaJogo bibliotecaJogo = new BibliotecaJogo();
