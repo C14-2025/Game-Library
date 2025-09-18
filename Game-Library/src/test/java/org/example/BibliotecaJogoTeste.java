@@ -132,4 +132,23 @@ public class BibliotecaJogoTeste {
         bibliotecaJogo.importarDeJson("nao_existe.json");
         assertTrue(bibliotecaJogo.listaVazia()); //A lista deve permanecer vazia se o arquivo não existe
     }
+    //Bissacot
+    @Test
+    public void testeAdicionarVariosJogos() {
+        // Criando uma biblioteca e 2 jogos
+        BibliotecaJogo bibliotecaJogo = new BibliotecaJogo();
+        Jogo jogo1 = new Jogo("Elden Ring", "25/02/2022", "RPG de Ação", 150);
+        Jogo jogo2 = new Jogo("God of War", "20/04/2018", "Ação/Aventura", 40);
+
+        // Adicionando jogos a biblioteca
+        bibliotecaJogo.adicionarJogo(jogo1);
+        bibliotecaJogo.adicionarJogo(jogo2);
+
+        // Verificando se o tamanho e o conteúdo da lista estão corretos
+        assertEquals(2, bibliotecaJogo.obterTamanho());
+        List<Jogo> listaDeJogos = bibliotecaJogo.listarJogos();
+        assertTrue(listaDeJogos.contains(jogo1));
+        assertTrue(listaDeJogos.contains(jogo2));
+    }
+
 }
