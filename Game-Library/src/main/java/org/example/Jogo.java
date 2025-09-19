@@ -4,13 +4,17 @@ public class Jogo {
     private String nome;
     private String dataLancamento;
     private String genero;
-    private int duracao;
+    private String plataforma;
+    private String desenvolvedora;
+    private String publicadora;
 
-    public Jogo(String nome, String dataLancamento, String genero, int duracao) {
+    public Jogo(String nome, String dataLancamento, String genero, String plataforma, String desenvolvedora, String publicadora) {
         this.nome = nome;
         this.dataLancamento = dataLancamento;
         this.genero = genero;
-        this.duracao = duracao;
+        this.plataforma = plataforma;
+        this.desenvolvedora = desenvolvedora;
+        this.publicadora = publicadora;
     }
 
     public String getNome() {
@@ -25,7 +29,15 @@ public class Jogo {
         return genero;
     }
 
-    public int getDuracao() {
-        return duracao;
+    public String getPlataforma() {
+        return plataforma;
+    }
+
+    public String getDesenvolvedora() {
+        return desenvolvedora;
+    }
+
+    public String getPublicadora() {
+        return publicadora;
     }
 }

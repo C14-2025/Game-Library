@@ -15,7 +15,7 @@ public class BibliotecaJogoTeste {
     @Test
     public void testeAdicionarJogo(){
         BibliotecaJogo bibliotecaJogo = new BibliotecaJogo();
-        bibliotecaJogo.adicionarJogo(new Jogo("Minecraft", "18/11/2011", "Sandbox", 999));
+        bibliotecaJogo.adicionarJogo(new Jogo("Minecraft", "18/11/2011", "Sandbox", "PC", "Mojang", "Microsoft"));
         int tamanho = bibliotecaJogo.obterTamanho();
         assertEquals(1,tamanho);
     }
@@ -23,7 +23,7 @@ public class BibliotecaJogoTeste {
     @Test
     public void testeListaVazia(){
         BibliotecaJogo bibliotecaJogo = new BibliotecaJogo();
-        bibliotecaJogo.adicionarJogo((new Jogo("MGS Delta: Snake Eater", "28/08/2025", "Espionagem", 24)));
+        bibliotecaJogo.adicionarJogo((new Jogo("MGS Delta: Snake Eater", "28/08/2025", "Espionagem", "PC", "Konami", "Konami")));
         boolean condicao = bibliotecaJogo.listaVazia();
         assertFalse(condicao);
     }
@@ -31,7 +31,7 @@ public class BibliotecaJogoTeste {
     @Test
     public void testeRemoverJogo(){
         BibliotecaJogo bibliotecaJogo = new BibliotecaJogo();
-        bibliotecaJogo.adicionarJogo((new Jogo("Persona 4 Golden", "14/06/2012", "RPG de Turno", 100)));
+        bibliotecaJogo.adicionarJogo((new Jogo("Persona 4 Golden", "14/06/2012", "RPG de Turno", "PS Vita", "Atlus", "Sega")));
         bibliotecaJogo.removerJogo("persona 4 golden");
         boolean condicao = bibliotecaJogo.listaVazia();
         assertTrue(condicao);
@@ -47,7 +47,7 @@ public class BibliotecaJogoTeste {
     @Test
     public void testeRemoverJogoInexistente(){
         BibliotecaJogo bibliotecaJogo = new BibliotecaJogo();
-        bibliotecaJogo.adicionarJogo((new Jogo("Persona 4 Golden", "14/06/2012", "RPG de Turno", 100)));
+        bibliotecaJogo.adicionarJogo((new Jogo("Persona 4 Golden", "14/06/2012", "RPG de Turno", "PS Vita", "Atlus", "Sega")));
         assertThrows(NoSuchElementException.class,
                 () -> bibliotecaJogo.removerJogo("teste"));
     }
@@ -55,8 +55,8 @@ public class BibliotecaJogoTeste {
     @Test
     public void testeListarJogos() {
         BibliotecaJogo bibliotecaJogo = new BibliotecaJogo();
-        Jogo jogo1 = new Jogo("Astro Bot", "06/07/2024", "Plataforma", 30);
-        Jogo jogo2 = new Jogo("Expedition 33", "24/04/2025", "RPG", 100);
+        Jogo jogo1 = new Jogo("Astro Bot", "06/07/2024", "Plataforma", "PS5", "Playstation", "Playstation");
+        Jogo jogo2 = new Jogo("Expedition 33", "24/04/2025", "RPG", "PC", "Sandfall Interactive", "Kepler Interactive");
       
         bibliotecaJogo.adicionarJogo(jogo1);
         bibliotecaJogo.adicionarJogo(jogo2);
@@ -69,9 +69,9 @@ public class BibliotecaJogoTeste {
     @Test
     public void testeAdicionarJogoDuplicadoLancaExcecao() {
         BibliotecaJogo bibliotecaJogo = new BibliotecaJogo();
-        bibliotecaJogo.adicionarJogo(new Jogo("Skyrim", "11/11/2011", "RPG", 300));
+        bibliotecaJogo.adicionarJogo(new Jogo("Skyrim", "11/11/2011", "RPG", "PC", "Bethesda", "Bethesda"));
         assertThrows(IllegalArgumentException.class,
-                () -> bibliotecaJogo.adicionarJogo(new Jogo("SKYRIM", "11/11/2011", "RPG", 300)));
+                () -> bibliotecaJogo.adicionarJogo(new Jogo("SKYRIM", "11/11/2011", "RPG", "PC", "Bethesda", "Bethesda")));
     }
 
     @Test
@@ -91,12 +91,15 @@ public class BibliotecaJogoTeste {
     @Test
     public void testeExportarParaJson_comJogos(){
         BibliotecaJogo bibliotecaJogo = new BibliotecaJogo();
-        bibliotecaJogo.adicionarJogo(new Jogo("Minecraft", "2011", "Sandbox", 1000));
+        bibliotecaJogo.adicionarJogo(new Jogo("Minecraft", "2011", "Sandbox", "PC", "Mojang", "Microsoft"));
 
         String json = bibliotecaJogo.exportarParaJson();
         assertTrue(json.contains("Minecraft"));
         assertTrue(json.contains("2011"));
         assertTrue(json.contains("Sandbox"));
+        assertTrue(json.contains("PC"));
+        assertTrue(json.contains("Mojang"));
+        assertTrue(json.contains("Microsoft"));
     }
 
     @Test
@@ -110,7 +113,9 @@ public class BibliotecaJogoTeste {
                     "nome": "The Witcher 3",
                     "dataLancamento": "2015",
                     "genero": "RPG",
-                    "duracao": 200
+                    "plataforma": "PC",
+                    "desenvolvedora": "CD Projekt",
+                    "publicadora": "CD Projekt"
                   }
                 ]
                 """;
@@ -135,13 +140,13 @@ public class BibliotecaJogoTeste {
         bibliotecaJogo.importarDeJson("nao_existe.json");
         assertTrue(bibliotecaJogo.listaVazia()); //A lista deve permanecer vazia se o arquivo não existe
     }
-    //Bissacot
+
     @Test
     public void testeAdicionarVariosJogos() {
         // Criando uma biblioteca e 2 jogos
         BibliotecaJogo bibliotecaJogo = new BibliotecaJogo();
-        Jogo jogo1 = new Jogo("Elden Ring", "25/02/2022", "RPG de Ação", 150);
-        Jogo jogo2 = new Jogo("God of War", "20/04/2018", "Ação/Aventura", 40);
+        Jogo jogo1 = new Jogo("Elden Ring", "25/02/2022", "RPG de Ação", "PS5", "From Software", "Bandai Nanco");
+        Jogo jogo2 = new Jogo("God of War", "20/04/2018", "Ação/Aventura", "PS4", "Santa Monica Studios", "Playstation");
 
         // Adicionando jogos a biblioteca
         bibliotecaJogo.adicionarJogo(jogo1);
