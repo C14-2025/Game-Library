@@ -36,11 +36,15 @@ public class Main {
                     String data = entrada.nextLine();
                     System.out.print("Gênero: ");
                     String genero = entrada.nextLine();
-                    System.out.print("Duração (em horas): ");
-                    int duracao = entrada.nextInt();
+                    System.out.print("Plataforma: ");
+                    String plataforma = entrada.nextLine();
+                    System.out.print("Desenvolvedora: ");
+                    String desenvolvedora = entrada.nextLine();
+                    System.out.print("Publicadora: ");
+                    String publicadora = entrada.nextLine();
                     entrada.nextLine();
 
-                    Jogo novoJogo = new Jogo(nome, data, genero, duracao);
+                    Jogo novoJogo = new Jogo(nome, data, genero, plataforma, desenvolvedora, publicadora);
                     biblioteca.adicionarJogo(novoJogo);
                     System.out.println("Jogo adicionado com sucesso!");
                     break;
@@ -55,7 +59,9 @@ public class Main {
                                     "- " + jogo.getNome() +
                                             " | " + jogo.getGenero() +
                                             " | Lançado em: " + jogo.getDataLancamento() +
-                                            " | Duração: " + jogo.getDuracao() + "h"
+                                            " | Plataforma: " + jogo.getPlataforma() +
+                                            " | Desenvolvedora: " + jogo.getDesenvolvedora() +
+                                            " | Publicadora: " + jogo.getPublicadora()
                             );
                         }
                     }
