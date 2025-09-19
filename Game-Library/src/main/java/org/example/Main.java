@@ -56,8 +56,8 @@ public class Main {
                         System.out.println("\n=== Lista de Jogos ===");
                         for (Jogo jogo : biblioteca.listarJogos()) {
                             System.out.println(
-                                    "- " + jogo.getNome() +
-                                            " | " + jogo.getGenero() +
+                                    "- Nome: " + jogo.getNome() +
+                                            " | Gênero: " + jogo.getGenero() +
                                             " | Lançado em: " + jogo.getDataLancamento() +
                                             " | Plataforma: " + jogo.getPlataforma() +
                                             " | Desenvolvedora: " + jogo.getDesenvolvedora() +
