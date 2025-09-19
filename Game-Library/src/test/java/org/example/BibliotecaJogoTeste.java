@@ -1,14 +1,14 @@
 package org.example;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-
-import static org.junit.Assert.*;
+import java.util.NoSuchElementException;
 
 public class BibliotecaJogoTeste {
 
@@ -37,17 +37,19 @@ public class BibliotecaJogoTeste {
         assertTrue(condicao);
     }
 
-    @Test(expected = java.lang.IllegalStateException.class)
+    @Test
     public void testeRemoverJogoListaVazia(){
         BibliotecaJogo bibliotecaJogo = new BibliotecaJogo();
-        bibliotecaJogo.removerJogo("teste");
+        assertThrows(IllegalStateException.class,
+                () -> bibliotecaJogo.removerJogo("teste"));
     }
 
-    @Test(expected = java.util.NoSuchElementException.class)
+    @Test
     public void testeRemoverJogoInexistente(){
         BibliotecaJogo bibliotecaJogo = new BibliotecaJogo();
         bibliotecaJogo.adicionarJogo((new Jogo("Persona 4 Golden", "14/06/2012", "RPG de Turno", 100)));
-        bibliotecaJogo.removerJogo("teste");
+        assertThrows(NoSuchElementException.class,
+                () -> bibliotecaJogo.removerJogo("teste"));
     }
 
     @Test
@@ -64,11 +66,12 @@ public class BibliotecaJogoTeste {
         assertTrue(lista.contains(jogo2));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testeAdicionarJogoDuplicadoLancaExcecao() {
         BibliotecaJogo bibliotecaJogo = new BibliotecaJogo();
         bibliotecaJogo.adicionarJogo(new Jogo("Skyrim", "11/11/2011", "RPG", 300));
-        bibliotecaJogo.adicionarJogo(new Jogo("SKYRIM", "11/11/2011", "RPG", 300));
+        assertThrows(IllegalArgumentException.class,
+                () -> bibliotecaJogo.adicionarJogo(new Jogo("SKYRIM", "11/11/2011", "RPG", 300)));
     }
 
     @Test
