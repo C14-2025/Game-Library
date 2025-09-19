@@ -47,7 +47,7 @@ public class BibliotecaJogoTeste {
     @Test
     public void testeRemoverJogoInexistente(){
         BibliotecaJogo bibliotecaJogo = new BibliotecaJogo();
-        bibliotecaJogo.adicionarJogo((new Jogo("Persona 4 Golden", "14/06/2012", "RPG de Turno", 100)));;
+        bibliotecaJogo.adicionarJogo((new Jogo("Persona 4 Golden", "14/06/2012", "RPG de Turno", 100)));
         assertThrows(NoSuchElementException.class,
                 () -> bibliotecaJogo.removerJogo("teste"));
     }
