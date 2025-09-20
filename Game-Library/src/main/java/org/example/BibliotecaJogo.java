@@ -23,6 +23,16 @@ public class BibliotecaJogo {
         return jogos.isEmpty();
     }
 
+    // Essa classe deve ser removida após todos os testes terem sido refatorados
+    public void adicionarJogo(Jogo jogo){
+        boolean existe = jogos.stream().anyMatch(j -> j.getNome().equalsIgnoreCase(jogo.getNome()));
+        if (existe) {
+            throw new IllegalArgumentException("O jogo '" + jogo.getNome() + "' já existe na biblioteca.");
+        }
+        jogos.add(jogo);
+    }
+
+    // Esta é a classe que usaremos para adicionar jogos na lista
     public void buscarEAdicionarJogo(String nome, JogoApiService api) {
         Optional<Jogo> opt = api.buscarJogoPorNome(nome);
         if (opt.isEmpty()) {
