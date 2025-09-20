@@ -44,7 +44,7 @@ public class BibliotecaJogoTeste {
         bibliotecaJogo.buscarEAdicionarJogo("TesteGame", apiMock);
 
         assertEquals(1, bibliotecaJogo.obterTamanho()); // Verifica tamanho
-        assertEquals("TesteGame", bibliotecaJogo.listarJogos().get(0).getNome()); // Verifica o nome
+        assertEquals("TesteGame", bibliotecaJogo.listarJogos().getFirst().getNome()); // Verifica o nome
         verify(apiMock, times(1)).buscarJogoPorNome("TesteGame");
     }
 
