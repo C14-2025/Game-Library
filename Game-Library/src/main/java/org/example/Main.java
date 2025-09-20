@@ -8,9 +8,11 @@ import java.util.Scanner;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-        Scanner entrada = new Scanner(System.in);
-
+        String apiKey = System.getenv("RAWG_API_KEY");
+        RawgApiClient api = new RawgApiClient(apiKey);
         BibliotecaJogo biblioteca = new BibliotecaJogo();
+
+        Scanner entrada = new Scanner(System.in);
         biblioteca.importarDeJson("jogo.json");
         System.out.println("\n-------------------------------------------");
         System.out.println("=== Bem-vindo à Biblioteca de Jogos ===");
@@ -19,7 +21,7 @@ public class Main {
         boolean flag = true;
         while(flag){
             System.out.println("\nOpções da iblioteca:");
-            System.out.println("1. Adicionar jogo");
+            System.out.println("1. Buscar e adicionar jogo à lista");
             System.out.println("2. Listar jogos");
             System.out.println("3. Remover jogo");
             System.out.println("4. Salvar e sair");
@@ -32,21 +34,14 @@ public class Main {
                 case 1:
                     System.out.print("\nNome do jogo: ");
                     String nome = entrada.nextLine();
-                    System.out.print("Data de lançamento: ");
-                    String data = entrada.nextLine();
-                    System.out.print("Gênero: ");
-                    String genero = entrada.nextLine();
-                    System.out.print("Plataforma: ");
-                    String plataforma = entrada.nextLine();
-                    System.out.print("Desenvolvedora: ");
-                    String desenvolvedora = entrada.nextLine();
-                    System.out.print("Publicadora: ");
-                    String publicadora = entrada.nextLine();
                     entrada.nextLine();
 
-                    Jogo novoJogo = new Jogo(nome, data, genero, plataforma, desenvolvedora, publicadora);
-                    biblioteca.adicionarJogo(novoJogo);
-                    System.out.println("Jogo adicionado com sucesso!");
+                    try {
+                        biblioteca.buscarEAdicionarJogo(nome, api);
+                        System.out.println("Jogo adicionado com sucesso: " + biblioteca.listarJogos().getFirst().getNome());
+                    } catch (Exception e) {
+                        System.out.println("Erro: " + e.getMessage());
+                    }
                     break;
 
                 case 2:
