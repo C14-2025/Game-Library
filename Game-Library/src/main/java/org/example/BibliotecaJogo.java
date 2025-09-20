@@ -10,6 +10,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 public class BibliotecaJogo {
     private List<Jogo> jogos = new ArrayList<>();
@@ -21,10 +22,16 @@ public class BibliotecaJogo {
     public boolean listaVazia(){
         return jogos.isEmpty();
     }
-    public void adicionarJogo(Jogo jogo){
+
+    public void buscarEAdicionarJogo(String nome, JogoApiService api) {
+        Optional<Jogo> opt = api.buscarJogoPorNome(nome);
+        if (opt.isEmpty()) {
+            throw new NoSuchElementException("Nenhum jogo encontrado na API para: " + nome);
+        }
+        Jogo jogo = opt.get();
         boolean existe = jogos.stream().anyMatch(j -> j.getNome().equalsIgnoreCase(jogo.getNome()));
         if (existe) {
-            throw new IllegalArgumentException("O jogo '" + jogo.getNome() + "' já existe na biblioteca.");
+            throw new IllegalArgumentException("Jogo já existe na biblioteca: " + jogo.getNome());
         }
         jogos.add(jogo);
     }
