@@ -1,5 +1,7 @@
 package org.example;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
@@ -8,7 +10,8 @@ import java.util.Scanner;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-        String apiKey = System.getenv("RAWG_API_KEY");
+        Dotenv dotenv = Dotenv.load();
+        String apiKey = dotenv.get("RAWG_API_KEY");
         RawgApiClient api = new RawgApiClient(apiKey);
         BibliotecaJogo biblioteca = new BibliotecaJogo();
 
@@ -34,11 +37,10 @@ public class Main {
                 case 1:
                     System.out.print("\nNome do jogo: ");
                     String nome = entrada.nextLine();
-                    entrada.nextLine();
 
                     try {
                         biblioteca.buscarEAdicionarJogo(nome, api);
-                        System.out.println("Jogo adicionado com sucesso: " + biblioteca.listarJogos().getFirst().getNome());
+                        System.out.println("Jogo adicionado com sucesso: ");
                     } catch (Exception e) {
                         System.out.println("Erro: " + e.getMessage());
                     }
