@@ -48,6 +48,32 @@ public class BibliotecaJogoTeste {
         verify(apiMock, times(1)).buscarJogoPorNome("TesteGame");
     }
 
+@Test
+    void testBuscarEAdicionar_notFound() {
+        when(apiMock.buscarJogoPorNome("Teste")).thenReturn(Optional.empty()); // Deve retornar vazio
+
+        assertEquals(0, bibliotecaJogo.obterTamanho()); // verifica o tamanho
+
+        assertThrows(NoSuchElementException.class, //Verifica se a exceção é tratada
+                () -> bibliotecaJogo.buscarEAdicionarJogo("Teste", apiMock));
+
+        verify(apiMock, times(1)).buscarJogoPorNome("Teste"); //Verifica o número de invocações do mock
+    }
+
+    @Test
+    void testAdicionarJogoDuplicadoViaApi() {
+        Jogo jogo = new Jogo("Skyrim", "2011", "RPG", "PC", "Bethesda", "Bethesda");
+        when(apiMock.buscarJogoPorNome("Skyrim")).thenReturn(Optional.of(jogo)); // deve retornar o jogo chamado Skyrim
+
+        // primeiro jogo adicionado
+        bibliotecaJogo.buscarEAdicionarJogo("Skyrim", apiMock);
+        assertEquals(1, bibliotecaJogo.obterTamanho()); //verifica o tamanho da lista
+
+        // segunda chamada deve lançar uma exceção
+        assertThrows(IllegalArgumentException.class,
+                () -> bibliotecaJogo.buscarEAdicionarJogo("Skyrim", apiMock));
+    }
+
     @Test
     public void testeListaVazia(){
         bibliotecaJogo.adicionarJogo((new Jogo("MGS Delta: Snake Eater", "28/08/2025", "Espionagem", "PC", "Konami", "Konami")));
