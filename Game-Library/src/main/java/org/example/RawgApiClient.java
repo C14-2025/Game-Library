@@ -68,16 +68,37 @@ public class RawgApiClient implements JogoApiService{
                 plataforma = g0.has("name") ? g0.get("name").getAsString() : "";
             }
 
-            String desenvolvedora = ""; // Recupera a desenvolvedora
-            if (g.has("developers") && g.get("developers").isJsonArray() && !g.getAsJsonArray("developers").isEmpty()) {
-                JsonObject g0 = g.getAsJsonArray("developers").get(0).getAsJsonObject();
-                desenvolvedora = g0.has("name") ? g0.get("name").getAsString() : "";
-            }
+            // Pega o id do jogo para buscar demais detalhes
+            int gameId = g.has("id") ? g.get("id").getAsInt() : -1;
 
-            String publicadora = ""; // Recupera a publicadora
-            if (g.has("publishers") && g.get("publishers").isJsonArray() && !g.getAsJsonArray("publishers").isEmpty()) {
-                JsonObject g0 = g.getAsJsonArray("publishers").get(0).getAsJsonObject();
-                publicadora = g0.has("name") ? g0.get("name").getAsString() : "";
+            String desenvolvedora = "";
+            String publicadora = "";
+
+            // Segunda requisição
+            if (gameId != -1) {
+                String urlDetalhes = BASE + "/" + gameId + "?key=" + apiKey;
+                HttpRequest reqDetalhes = HttpRequest.newBuilder()
+                        .uri(URI.create(urlDetalhes))
+                        .header("User-Agent", "biblioteca-jogos/1.0")
+                        .GET()
+                        .build();
+
+                HttpResponse<String> respDetalhes = client.send(reqDetalhes, HttpResponse.BodyHandlers.ofString());
+                if (respDetalhes.statusCode() == 200) {
+                    JsonObject detalhes = JsonParser.parseString(respDetalhes.body()).getAsJsonObject(); //variável auxiliar que vai buscar a desenvolvedora e a publicadora do jogo
+
+                    if (detalhes.has("developers") && detalhes.get("developers").isJsonArray()
+                            && !detalhes.getAsJsonArray("developers").isEmpty()) {
+                        JsonObject dev = detalhes.getAsJsonArray("developers").get(0).getAsJsonObject();
+                        desenvolvedora = dev.has("name") ? dev.get("name").getAsString() : "";
+                    }
+
+                    if (detalhes.has("publishers") && detalhes.get("publishers").isJsonArray()
+                            && !detalhes.getAsJsonArray("publishers").isEmpty()) {
+                        JsonObject pub = detalhes.getAsJsonArray("publishers").get(0).getAsJsonObject();
+                        publicadora = pub.has("name") ? pub.get("name").getAsString() : "";
+                    }
+                }
             }
 
             Jogo jogo = new Jogo(nomeApi, lancamento, genero, plataforma, desenvolvedora, publicadora); // Cria um novo jogo

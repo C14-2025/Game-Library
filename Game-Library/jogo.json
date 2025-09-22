@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "nome": "Persona 4 Golden",
+    "dataLancamento": "2012-11-20",
+    "genero": "RPG",
+    "plataforma": "PC",
+    "desenvolvedora": "Atlus",
+    "publicadora": "SEGA"
+  }
+]
