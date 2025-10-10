@@ -14,5 +14,37 @@
     "plataforma": "PC",
     "desenvolvedora": "ZA/UM",
     "publicadora": ""
+  },
+  {
+    "nome": "The Witcher 3: Wild Hunt",
+    "dataLancamento": "2015-05-19",
+    "genero": "RPG de Ação",
+    "plataforma": "PC",
+    "desenvolvedora": "CD Projekt Red",
+    "publicadora": "CD Projekt"
+  },
+  {
+    "nome": "Red Dead Redemption 2",
+    "dataLancamento": "2018-10-26",
+    "genero": "Ação-Aventura",
+    "plataforma": "PC",
+    "desenvolvedora": "Rockstar Games",
+    "publicadora": "Rockstar Games"
+  },
+  {
+    "nome": "Elden Ring",
+    "dataLancamento": "2022-02-25",
+    "genero": "RPG de Ação",
+    "plataforma": "PC",
+    "desenvolvedora": "FromSoftware",
+    "publicadora": "Bandai Namco"
+  },
+  {
+    "nome": "Stardew Valley",
+    "dataLancamento": "2016-02-26",
+    "genero": "Simulação de Vida",
+    "plataforma": "PC",
+    "desenvolvedora": "ConcernedApe",
+    "publicadora": "ConcernedApe"
   }
 ]

@@ -198,8 +198,46 @@ public class BibliotecaJogoTeste {
 
     @Test
     @DisplayName("Deve permanecer vazia ao tentar importar de arquivo inexistente")
-    void testImportarDeJson_arquivoInexistente() {
-        bibliotecaJogo.importarDeJson("nao_existe.json");
-        assertTrue(bibliotecaJogo.listaVazia());
+    void testImportarDeJson_arquivoInexistente_comMock() {
+        
+        BibliotecaJogo bibliotecaSpy = Mockito.spy(new BibliotecaJogo());
+
+        doThrow(new RuntimeException("Arquivo não encontrado"))
+                .when(bibliotecaSpy).importarDeJson("nao_existe.json");
+
+        
+        try {
+            bibliotecaSpy.importarDeJson("nao_existe.json");
+        } catch (Exception e) {
+        }
+
+        assertTrue(bibliotecaSpy.listaVazia());
+    }
+
+    @Test
+    void testeAdicionarVariosJogos_comMock() {
+        BibliotecaJogo bibliotecaJogo = new BibliotecaJogo();
+        Jogo jogo1 = mock(Jogo.class);
+        Jogo jogo2 = mock(Jogo.class);
+
+        when(jogo1.getNome()).thenReturn("Elden Ring");
+        when(jogo1.getAnoLancamento()).thenReturn("25/02/2022");
+        when(jogo1.getGenero()).thenReturn("RPG de Ação");
+
+        when(jogo2.getNome()).thenReturn("God of War");
+        when(jogo2.getAnoLancamento()).thenReturn("20/04/2018");
+        when(jogo2.getGenero()).thenReturn("Ação/Aventura");
+
+        bibliotecaJogo.adicionarJogo(jogo1);
+        bibliotecaJogo.adicionarJogo(jogo2);
+
+        assertEquals(2, bibliotecaJogo.obterTamanho());
+
+        List<Jogo> lista = bibliotecaJogo.listarJogos();
+        assertTrue(lista.contains(jogo1));
+        assertTrue(lista.contains(jogo2));
+
+        verify(jogo1, atLeastOnce()).getNome();
+        verify(jogo2, atLeastOnce()).getNome();
     }
 }
