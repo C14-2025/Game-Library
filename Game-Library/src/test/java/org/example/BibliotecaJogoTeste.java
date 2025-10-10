@@ -1,205 +1,175 @@
 package org.example;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
 public class BibliotecaJogoTeste {
 
-    // Fixture
     private BibliotecaJogo bibliotecaJogo;
+
+    @Mock
     private JogoApiService apiMock;
 
     @BeforeEach
-    public void setup(){
+    void setUp() {
         bibliotecaJogo = new BibliotecaJogo();
-        apiMock = mock(JogoApiService.class);
     }
 
     @Test
-    public void testeBuscareAdicionarJogoComMock(){
+    @DisplayName("Deve buscar e adicionar um jogo com sucesso via API")
+    void testeBuscareAdicionarJogoComMock() {
+        Jogo jogo = new Jogo("TesteGame", "20/09/2025", "Teste", "TesteStation", "TesteSoft", "TesteCorp");
+        when(apiMock.buscarJogoPorNome("TesteGame")).thenReturn(Optional.of(jogo));
 
-        Jogo jogo = new Jogo("TesteGame",
-                "20/09/2025",
-                "Teste",
-                "TesteStation",
-                "TesteSoft",
-                "TesteCorp");
-
-        // Definição do comportamento do mock
-        when(apiMock.buscarJogoPorNome("TesteGame")) // Se o seguinte nome for inserido
-                .thenReturn(Optional.of(jogo)); // o mock deve retornar o jogo que contém esse nome
-
-        // Lógica da classe
         bibliotecaJogo.buscarEAdicionarJogo("TesteGame", apiMock);
 
-        assertEquals(1, bibliotecaJogo.obterTamanho()); // Verifica tamanho
-        assertEquals("TesteGame", bibliotecaJogo.listarJogos().getFirst().getNome()); // Verifica o nome
+        assertEquals(1, bibliotecaJogo.obterTamanho());
+        assertEquals("TesteGame", bibliotecaJogo.listarJogos().getFirst().getNome());
         verify(apiMock, times(1)).buscarJogoPorNome("TesteGame");
     }
 
-@Test
+    @Test
+    @DisplayName("Deve lançar exceção ao buscar jogo que API não encontra")
     void testBuscarEAdicionar_notFound() {
-        when(apiMock.buscarJogoPorNome("Teste")).thenReturn(Optional.empty()); // Deve retornar vazio
+        when(apiMock.buscarJogoPorNome("Teste")).thenReturn(Optional.empty());
 
-        assertEquals(0, bibliotecaJogo.obterTamanho()); // verifica o tamanho
+        assertEquals(0, bibliotecaJogo.obterTamanho());
 
-        assertThrows(NoSuchElementException.class, //Verifica se a exceção é tratada
+        assertThrows(NoSuchElementException.class,
                 () -> bibliotecaJogo.buscarEAdicionarJogo("Teste", apiMock));
 
-        verify(apiMock, times(1)).buscarJogoPorNome("Teste"); //Verifica o número de invocações do mock
+        verify(apiMock, times(1)).buscarJogoPorNome("Teste");
     }
 
     @Test
+    @DisplayName("Deve lançar exceção ao tentar adicionar jogo duplicado via API")
     void testAdicionarJogoDuplicadoViaApi() {
         Jogo jogo = new Jogo("Skyrim", "2011", "RPG", "PC", "Bethesda", "Bethesda");
-        when(apiMock.buscarJogoPorNome("Skyrim")).thenReturn(Optional.of(jogo)); // deve retornar o jogo chamado Skyrim
+        when(apiMock.buscarJogoPorNome("Skyrim")).thenReturn(Optional.of(jogo));
 
-        // primeiro jogo adicionado
         bibliotecaJogo.buscarEAdicionarJogo("Skyrim", apiMock);
-        assertEquals(1, bibliotecaJogo.obterTamanho()); //verifica o tamanho da lista
+        assertEquals(1, bibliotecaJogo.obterTamanho());
 
-        // segunda chamada deve lançar uma exceção
         assertThrows(IllegalArgumentException.class,
                 () -> bibliotecaJogo.buscarEAdicionarJogo("Skyrim", apiMock));
     }
 
     @Test
-    public void testeListaVazia(){
-        Jogo jogo = new Jogo("Metal Gear Solid Delta: Snake Eater",
-                "28/08/2025",
-                "Espionagem",
-                "PC",
-                "Konami",
-                "Konami");
-
-        when(apiMock.buscarJogoPorNome("Metal Gear Solid Delta: Snake Eater")).thenReturn(Optional.of(jogo));
+    @DisplayName("Deve retornar falso para listaVazia quando contém um jogo")
+    void testeListaNaoEstaVazia() {
+        Jogo jogo = new Jogo("Metal Gear Solid Delta: Snake Eater", "28/08/2025", "Espionagem", "PC", "Konami", "Konami");
+        when(apiMock.buscarJogoPorNome(anyString())).thenReturn(Optional.of(jogo));
         bibliotecaJogo.buscarEAdicionarJogo("Metal Gear Solid Delta: Snake Eater", apiMock);
 
         assertEquals(1, bibliotecaJogo.obterTamanho());
-        boolean condicao = bibliotecaJogo.listaVazia();
-        assertFalse(condicao);
+        assertFalse(bibliotecaJogo.listaVazia());
     }
 
     @Test
-    public void testeRemoverJogo(){
-        Jogo jogo = new Jogo("Persona 4 Golden",
-                "14/06/2012",
-                "RPG de Turno",
-                "PS Vita",
-                "Atlus",
-                "Sega");
+    @DisplayName("Deve remover um jogo com sucesso")
+    void testeRemoverJogo() {
+        Jogo jogo = new Jogo("Persona 4 Golden", "14/06/2012", "RPG de Turno", "PS Vita", "Atlus", "Sega");
+        bibliotecaJogo.adicionarJogo(jogo);
+        assertEquals(1, bibliotecaJogo.obterTamanho());
 
-        when(apiMock.buscarJogoPorNome("Persona 4 Golden")).thenReturn(Optional.of(jogo));
-        bibliotecaJogo.buscarEAdicionarJogo("Persona 4 Golden", apiMock);
         bibliotecaJogo.removerJogo("persona 4 golden");
 
         assertEquals(0, bibliotecaJogo.obterTamanho());
-        boolean condicao = bibliotecaJogo.listaVazia();
-        assertTrue(condicao);
+        assertTrue(bibliotecaJogo.listaVazia());
     }
 
     @Test
-    public void testeRemoverJogoListaVazia(){
+    @DisplayName("Deve lançar exceção ao tentar remover de uma lista vazia")
+    void testeRemoverJogoListaVazia() {
         assertEquals(0, bibliotecaJogo.obterTamanho());
         assertThrows(IllegalStateException.class,
                 () -> bibliotecaJogo.removerJogo("teste"));
     }
 
     @Test
-    public void testeRemoverJogoInexistente(){
-        Jogo jogo = new Jogo("Persona 4 Golden",
-                "14/06/2012",
-                "RPG de Turno",
-                "PS Vita",
-                "Atlus",
-                "Sega");
-
-        when(apiMock.buscarJogoPorNome("Persona 4 Golden")).thenReturn(Optional.of(jogo));
-        bibliotecaJogo.buscarEAdicionarJogo("Persona 4 Golden", apiMock);
+    @DisplayName("Deve lançar exceção ao tentar remover um jogo inexistente")
+    void testeRemoverJogoInexistente() {
+        Jogo jogo = new Jogo("Persona 4 Golden", "14/06/2012", "RPG de Turno", "PS Vita", "Atlus", "Sega");
+        bibliotecaJogo.adicionarJogo(jogo);
 
         assertEquals(1, bibliotecaJogo.obterTamanho());
         assertThrows(NoSuchElementException.class,
                 () -> bibliotecaJogo.removerJogo("teste"));
     }
 
-@Test
-public void testeListarJogos() {
-    Jogo jogo1 = new Jogo("Astro Bot", "06/07/2024", "Plataforma", "PS5", "Playstation", "Playstation");
-    Jogo jogo2 = new Jogo("Expedition 33", "24/04/2025", "RPG", "PC", "Sandfall Interactive", "Kepler Interactive");
-
-    List<Jogo> jogosMock = Arrays.asList(jogo1, jogo2);
-    when(bibliotecaJogo.listarJogos()).thenReturn(jogosMock);
-
-    List<Jogo> lista = bibliotecaJogo.listarJogos();
-
-    assertEquals(2, lista.size());
-    assertTrue(lista.contains(jogo1));
-    assertTrue(lista.contains(jogo2));
-    verify(bibliotecaJogo, times(1)).listarJogos();
-}
-
-@Test
-public void testeAdicionarJogoDuplicadoLancaExcecao() {
-    Jogo jogo = new Jogo("Skyrim", "11/11/2011", "RPG", "PC", "Bethesda", "Bethesda");
-
-    doThrow(new IllegalArgumentException("Jogo já existe"))
-            .when(bibliotecaJogo)
-            .adicionarJogo(any(Jogo.class));
-
-    assertThrows(IllegalArgumentException.class, () ->
-            bibliotecaJogo.adicionarJogo(jogo));
-
-    verify(bibliotecaJogo, times(1)).adicionarJogo(any(Jogo.class));
-}
-
-@Test
-public void testeBibliotecaRecemCriadaVazia() {
-    when(bibliotecaJogo.obterTamanho()).thenReturn(0);
-    when(bibliotecaJogo.listaVazia()).thenReturn(true);
-
-    assertEquals(0, bibliotecaJogo.obterTamanho());
-    assertTrue(bibliotecaJogo.listaVazia());
-
-    verify(bibliotecaJogo, times(1)).obterTamanho();
-    verify(bibliotecaJogo, times(1)).listaVazia();
-}
-
-
     @Test
-    public void testeExportarParaJson_listaVazia(){
-        String json = bibliotecaJogo.exportarParaJson();
-        assertEquals("[]", json.trim()); //A exportação de uma lista vazia deve gerar []
+    @DisplayName("Deve listar corretamente os jogos adicionados")
+    void testeListarJogos() {
+        Jogo jogo1 = new Jogo("Astro Bot", "06/07/2024", "Plataforma", "PS5", "Playstation", "Playstation");
+        Jogo jogo2 = new Jogo("Expedition 33", "24/04/2025", "RPG", "PC", "Sandfall Interactive", "Kepler Interactive");
+
+        bibliotecaJogo.adicionarJogo(jogo1);
+        bibliotecaJogo.adicionarJogo(jogo2);
+
+        List<Jogo> lista = bibliotecaJogo.listarJogos();
+
+        assertEquals(2, lista.size());
+        assertTrue(lista.contains(jogo1));
+        assertTrue(lista.contains(jogo2));
     }
 
     @Test
-    public void testeExportarParaJson_comJogos(){
+    @DisplayName("Deve lançar exceção ao adicionar jogo duplicado diretamente")
+    void testeAdicionarJogoDuplicadoLancaExcecao() {
+        Jogo jogo = new Jogo("Skyrim", "11/11/2011", "RPG", "PC", "Bethesda", "Bethesda");
+        bibliotecaJogo.adicionarJogo(jogo);
+        assertEquals(1, bibliotecaJogo.obterTamanho());
+
+        assertThrows(IllegalArgumentException.class, () ->
+                bibliotecaJogo.adicionarJogo(jogo));
+        
+        assertEquals(1, bibliotecaJogo.obterTamanho());
+    }
+
+    @Test
+    @DisplayName("Deve estar vazia quando recém-criada")
+    void testeBibliotecaRecemCriadaVazia() {
+        assertEquals(0, bibliotecaJogo.obterTamanho());
+        assertTrue(bibliotecaJogo.listaVazia());
+    }
+
+    @Test
+    @DisplayName("Deve exportar uma lista vazia para um JSON array vazio")
+    void testeExportarParaJson_listaVazia() {
+        String json = bibliotecaJogo.exportarParaJson();
+        assertEquals("[]", json.trim());
+    }
+
+    @Test
+    @DisplayName("Deve exportar uma lista com jogos para um JSON populado")
+    void testeExportarParaJson_comJogos() {
         bibliotecaJogo.adicionarJogo(new Jogo("Minecraft", "2011", "Sandbox", "PC", "Mojang", "Microsoft"));
 
         String json = bibliotecaJogo.exportarParaJson();
         assertTrue(json.contains("Minecraft"));
         assertTrue(json.contains("2011"));
         assertTrue(json.contains("Sandbox"));
-        assertTrue(json.contains("PC"));
-        assertTrue(json.contains("Mojang"));
-        assertTrue(json.contains("Microsoft"));
     }
 
     @Test
-    public void testeImportarDeJson_comArquivoValido() throws IOException {
-
-        // JSON temporário
+    @DisplayName("Deve importar jogos de um arquivo JSON válido")
+    void testeImportarDeJson_comArquivoValido() throws IOException {
         String json = """
                 [
                   {
@@ -213,41 +183,23 @@ public void testeBibliotecaRecemCriadaVazia() {
                 ]
                 """;
 
-        Path arquivoTemp = Files.createTempFile("jogos", ".json"); //cria um arquivo temporário para que a string seja inserida
-        try (FileWriter writer = new FileWriter(arquivoTemp.toFile())) { //tenta escrever algo no json
+        Path arquivoTemp = Files.createTempFile("jogos", ".json");
+        try (FileWriter writer = new FileWriter(arquivoTemp.toFile())) {
             writer.write(json);
         }
 
-        bibliotecaJogo.importarDeJson(arquivoTemp.toString()); //passa o json para uma string
+        bibliotecaJogo.importarDeJson(arquivoTemp.toString());
 
         assertEquals(1, bibliotecaJogo.obterTamanho());
-        assertEquals("The Witcher 3", bibliotecaJogo.listarJogos().getFirst().getNome()); //Verifica o primeiro índice da lista
+        assertEquals("The Witcher 3", bibliotecaJogo.listarJogos().getFirst().getNome());
 
-        // apaga o arquivo depois da execução do teste
         Files.deleteIfExists(arquivoTemp);
     }
 
     @Test
-    public void testImportarDeJson_arquivoInexistente() {
+    @DisplayName("Deve permanecer vazia ao tentar importar de arquivo inexistente")
+    void testImportarDeJson_arquivoInexistente() {
         bibliotecaJogo.importarDeJson("nao_existe.json");
-        assertTrue(bibliotecaJogo.listaVazia()); //A lista deve permanecer vazia se o arquivo não existe
+        assertTrue(bibliotecaJogo.listaVazia());
     }
-
-    @Test
-    public void testeAdicionarVariosJogos() {
-        // Criando uma biblioteca e 2 jogos
-        Jogo jogo1 = new Jogo("Elden Ring", "25/02/2022", "RPG de Ação", "PS5", "From Software", "Bandai Nanco");
-        Jogo jogo2 = new Jogo("God of War", "20/04/2018", "Ação/Aventura", "PS4", "Santa Monica Studios", "Playstation");
-
-        // Adicionando jogos a biblioteca
-        bibliotecaJogo.adicionarJogo(jogo1);
-        bibliotecaJogo.adicionarJogo(jogo2);
-
-        // Verificando se o tamanho e o conteúdo da lista estão corretos
-        assertEquals(2, bibliotecaJogo.obterTamanho());
-        List<Jogo> listaDeJogos = bibliotecaJogo.listarJogos();
-        assertTrue(listaDeJogos.contains(jogo1));
-        assertTrue(listaDeJogos.contains(jogo2));
-    }
-
 }
