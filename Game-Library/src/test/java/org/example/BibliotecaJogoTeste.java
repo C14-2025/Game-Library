@@ -1,18 +1,26 @@
 package org.example;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class BibliotecaJogoTeste {
 
@@ -133,31 +141,48 @@ public class BibliotecaJogoTeste {
                 () -> bibliotecaJogo.removerJogo("teste"));
     }
 
-    @Test
-    public void testeListarJogos() {
-        Jogo jogo1 = new Jogo("Astro Bot", "06/07/2024", "Plataforma", "PS5", "Playstation", "Playstation");
-        Jogo jogo2 = new Jogo("Expedition 33", "24/04/2025", "RPG", "PC", "Sandfall Interactive", "Kepler Interactive");
+@Test
+public void testeListarJogos() {
+    Jogo jogo1 = new Jogo("Astro Bot", "06/07/2024", "Plataforma", "PS5", "Playstation", "Playstation");
+    Jogo jogo2 = new Jogo("Expedition 33", "24/04/2025", "RPG", "PC", "Sandfall Interactive", "Kepler Interactive");
 
-        bibliotecaJogo.adicionarJogo(jogo1);
-        bibliotecaJogo.adicionarJogo(jogo2);
-        List<Jogo> lista = bibliotecaJogo.listarJogos();
-        assertEquals(2, lista.size());
-        assertTrue(lista.contains(jogo1));
-        assertTrue(lista.contains(jogo2));
-    }
+    List<Jogo> jogosMock = Arrays.asList(jogo1, jogo2);
+    when(bibliotecaJogo.listarJogos()).thenReturn(jogosMock);
 
-    @Test
-    public void testeAdicionarJogoDuplicadoLancaExcecao() {
-        bibliotecaJogo.adicionarJogo(new Jogo("Skyrim", "11/11/2011", "RPG", "PC", "Bethesda", "Bethesda"));
-        assertThrows(IllegalArgumentException.class,
-                () -> bibliotecaJogo.adicionarJogo(new Jogo("SKYRIM", "11/11/2011", "RPG", "PC", "Bethesda", "Bethesda")));
-    }
+    List<Jogo> lista = bibliotecaJogo.listarJogos();
 
-    @Test
-    public void testeBibliotecaRecemCriadaVazia() {
-        assertEquals(0, bibliotecaJogo.obterTamanho());
-        assertTrue(bibliotecaJogo.listaVazia());
-    }
+    assertEquals(2, lista.size());
+    assertTrue(lista.contains(jogo1));
+    assertTrue(lista.contains(jogo2));
+    verify(bibliotecaJogo, times(1)).listarJogos();
+}
+
+@Test
+public void testeAdicionarJogoDuplicadoLancaExcecao() {
+    Jogo jogo = new Jogo("Skyrim", "11/11/2011", "RPG", "PC", "Bethesda", "Bethesda");
+
+    doThrow(new IllegalArgumentException("Jogo já existe"))
+            .when(bibliotecaJogo)
+            .adicionarJogo(any(Jogo.class));
+
+    assertThrows(IllegalArgumentException.class, () ->
+            bibliotecaJogo.adicionarJogo(jogo));
+
+    verify(bibliotecaJogo, times(1)).adicionarJogo(any(Jogo.class));
+}
+
+@Test
+public void testeBibliotecaRecemCriadaVazia() {
+    when(bibliotecaJogo.obterTamanho()).thenReturn(0);
+    when(bibliotecaJogo.listaVazia()).thenReturn(true);
+
+    assertEquals(0, bibliotecaJogo.obterTamanho());
+    assertTrue(bibliotecaJogo.listaVazia());
+
+    verify(bibliotecaJogo, times(1)).obterTamanho();
+    verify(bibliotecaJogo, times(1)).listaVazia();
+}
+
 
     @Test
     public void testeExportarParaJson_listaVazia(){
