@@ -201,19 +201,4 @@ public class BibliotecaJogoTeste {
         assertTrue(listaDeJogos.contains(jogo2));
     }
 
-    @Test
-    public void testeExportarParaJsonComMock() {
-        // Teste com MOCK usando Mockito
-        Gson gsonMock = Mockito.mock(Gson.class);
-
-        BibliotecaJogo bibliotecaJogo = new BibliotecaJogo();
-        bibliotecaJogo.adicionarJogo(new Jogo("Minecraft", "18/11/2011", "Sandbox", "PC", "Mojang", "Microsoft"));
-
-        when(gsonMock.toJson(any())).thenReturn("[{\"nome\":\"Minecraft\"}]");
-
-        String json = gsonMock.toJson(bibliotecaJogo.listarJogos());
-
-        assertEquals("[{\"nome\":\"Minecraft\"}]", json);
-    }
-
 }
