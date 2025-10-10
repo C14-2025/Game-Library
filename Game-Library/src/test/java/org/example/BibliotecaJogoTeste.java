@@ -76,28 +76,59 @@ public class BibliotecaJogoTeste {
 
     @Test
     public void testeListaVazia(){
-        bibliotecaJogo.adicionarJogo((new Jogo("MGS Delta: Snake Eater", "28/08/2025", "Espionagem", "PC", "Konami", "Konami")));
+        Jogo jogo = new Jogo("Metal Gear Solid Delta: Snake Eater",
+                "28/08/2025",
+                "Espionagem",
+                "PC",
+                "Konami",
+                "Konami");
+
+        when(apiMock.buscarJogoPorNome("Metal Gear Solid Delta: Snake Eater")).thenReturn(Optional.of(jogo));
+        bibliotecaJogo.buscarEAdicionarJogo("Metal Gear Solid Delta: Snake Eater", apiMock);
+
+        assertEquals(1, bibliotecaJogo.obterTamanho());
         boolean condicao = bibliotecaJogo.listaVazia();
         assertFalse(condicao);
     }
 
     @Test
     public void testeRemoverJogo(){
-        bibliotecaJogo.adicionarJogo((new Jogo("Persona 4 Golden", "14/06/2012", "RPG de Turno", "PS Vita", "Atlus", "Sega")));
+        Jogo jogo = new Jogo("Persona 4 Golden",
+                "14/06/2012",
+                "RPG de Turno",
+                "PS Vita",
+                "Atlus",
+                "Sega");
+
+        when(apiMock.buscarJogoPorNome("Persona 4 Golden")).thenReturn(Optional.of(jogo));
+        bibliotecaJogo.buscarEAdicionarJogo("Persona 4 Golden", apiMock);
         bibliotecaJogo.removerJogo("persona 4 golden");
+
+        assertEquals(0, bibliotecaJogo.obterTamanho());
         boolean condicao = bibliotecaJogo.listaVazia();
         assertTrue(condicao);
     }
 
     @Test
     public void testeRemoverJogoListaVazia(){
+        assertEquals(0, bibliotecaJogo.obterTamanho());
         assertThrows(IllegalStateException.class,
                 () -> bibliotecaJogo.removerJogo("teste"));
     }
 
     @Test
     public void testeRemoverJogoInexistente(){
-        bibliotecaJogo.adicionarJogo((new Jogo("Persona 4 Golden", "14/06/2012", "RPG de Turno", "PS Vita", "Atlus", "Sega")));
+        Jogo jogo = new Jogo("Persona 4 Golden",
+                "14/06/2012",
+                "RPG de Turno",
+                "PS Vita",
+                "Atlus",
+                "Sega");
+
+        when(apiMock.buscarJogoPorNome("Persona 4 Golden")).thenReturn(Optional.of(jogo));
+        bibliotecaJogo.buscarEAdicionarJogo("Persona 4 Golden", apiMock);
+
+        assertEquals(1, bibliotecaJogo.obterTamanho());
         assertThrows(NoSuchElementException.class,
                 () -> bibliotecaJogo.removerJogo("teste"));
     }
