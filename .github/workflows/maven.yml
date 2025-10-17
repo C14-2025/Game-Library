@@ -32,3 +32,9 @@ jobs:
       run: |
         cd Game-Library
         mvn clean install -DskipTests
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: jar file
+        path: Game-Library/target/*.jar
