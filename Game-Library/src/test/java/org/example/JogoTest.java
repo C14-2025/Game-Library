@@ -3,7 +3,7 @@ package org.example;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class JogoTeste {
+public class JogoTest {
 
     @Test
     public void testeGetNomeCorretamente(){
