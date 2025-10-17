@@ -27,13 +27,13 @@ public class BibliotecaJogoTeste {
     private JogoApiService apiMock;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         bibliotecaJogo = new BibliotecaJogo();
     }
 
     @Test
     @DisplayName("Deve buscar e adicionar um jogo com sucesso via API")
-    void testeBuscareAdicionarJogoComMock() {
+    public void testeBuscareAdicionarJogoComMock() {
         Jogo jogo = new Jogo("TesteGame","20/09/2025", "Teste", "TesteStation", "TesteSoft", "TesteCorp");
         when(apiMock.buscarJogoPorNome("TesteGame")).thenReturn(Optional.of(jogo));
 
@@ -51,7 +51,7 @@ public class BibliotecaJogoTeste {
 
     @Test
     @DisplayName("Deve lançar exceção ao buscar jogo que API não encontra")
-    void testBuscarEAdicionar_notFound() {
+    public void testBuscarEAdicionar_notFound() {
         when(apiMock.buscarJogoPorNome("Teste")).thenReturn(Optional.empty());
 
         assertEquals(0, bibliotecaJogo.obterTamanho());
@@ -64,7 +64,7 @@ public class BibliotecaJogoTeste {
 
     @Test
     @DisplayName("Deve lançar exceção ao tentar adicionar jogo duplicado via API")
-    void testAdicionarJogoDuplicadoViaApi() {
+    public void testAdicionarJogoDuplicadoViaApi() {
         Jogo jogo = new Jogo("Skyrim", "2011", "RPG", "PC", "Bethesda", "Bethesda");
         when(apiMock.buscarJogoPorNome("Skyrim")).thenReturn(Optional.of(jogo));
 
@@ -79,7 +79,7 @@ public class BibliotecaJogoTeste {
 
     @Test
     @DisplayName("Deve retornar falso para listaVazia quando contém um jogo")
-    void testeListaNaoEstaVazia() {
+    public void testeListaNaoEstaVazia() {
         Jogo jogo = new Jogo("Metal Gear Solid Delta: Snake Eater", "28/08/2025", "Espionagem", "PC", "Konami", "Konami");
         when(apiMock.buscarJogoPorNome("Metal Gear Solid Delta: Snake Eater")).thenReturn(Optional.of(jogo));
         bibliotecaJogo.buscarEAdicionarJogo("Metal Gear Solid Delta: Snake Eater", apiMock);
@@ -91,7 +91,7 @@ public class BibliotecaJogoTeste {
 
     @Test
     @DisplayName("Deve remover um jogo com sucesso")
-    void testeRemoverJogo() {
+    public void testeRemoverJogo() {
         Jogo jogo = new Jogo("Persona 4 Golden", "14/06/2012", "RPG de Turno", "PS Vita", "Atlus", "Sega");
         when(apiMock.buscarJogoPorNome("Persona 4 Golden")).thenReturn(Optional.of(jogo));
         bibliotecaJogo.buscarEAdicionarJogo("Persona 4 Golden", apiMock);
@@ -107,7 +107,7 @@ public class BibliotecaJogoTeste {
 
     @Test
     @DisplayName("Deve lançar exceção ao tentar remover de uma lista vazia")
-    void testeRemoverJogoListaVazia() {
+    public void testeRemoverJogoListaVazia() {
         assertEquals(0, bibliotecaJogo.obterTamanho());
         assertThrows(IllegalStateException.class,
                 () -> bibliotecaJogo.removerJogo("teste"));
@@ -115,7 +115,7 @@ public class BibliotecaJogoTeste {
 
     @Test
     @DisplayName("Deve lançar exceção ao tentar remover um jogo inexistente")
-    void testeRemoverJogoInexistente() {
+    public void testeRemoverJogoInexistente() {
         Jogo jogo = new Jogo("Persona 4 Golden", "14/06/2012", "RPG de Turno", "PS Vita", "Atlus", "Sega");
         when(apiMock.buscarJogoPorNome("Persona 4 Golden")).thenReturn(Optional.of(jogo));
         bibliotecaJogo.buscarEAdicionarJogo("Persona 4 Golden", apiMock);
@@ -129,7 +129,7 @@ public class BibliotecaJogoTeste {
 
     @Test
     @DisplayName("Deve listar corretamente os jogos adicionados")
-    void testeListarJogos() {
+    public void testeListarJogos() {
         Jogo jogo1 = new Jogo("Astro Bot", "06/07/2024", "Plataforma", "PS5", "Playstation", "Playstation");
         Jogo jogo2 = new Jogo("Expedition 33", "24/04/2025", "RPG", "PC", "Sandfall Interactive", "Kepler Interactive");
 
@@ -151,21 +151,21 @@ public class BibliotecaJogoTeste {
 
     @Test
     @DisplayName("Deve estar vazia quando recém-criada")
-    void testeBibliotecaRecemCriadaVazia() {
+    public void testeBibliotecaRecemCriadaVazia() {
         assertEquals(0, bibliotecaJogo.obterTamanho());
         assertTrue(bibliotecaJogo.listaVazia());
     }
 
     @Test
     @DisplayName("Deve exportar uma lista vazia para um JSON array vazio")
-    void testeExportarParaJson_listaVazia() {
+    public void testeExportarParaJson_listaVazia() {
         String json = bibliotecaJogo.exportarParaJson();
         assertEquals("[]", json.trim());
     }
 
     @Test
     @DisplayName("Deve exportar uma lista com jogos para um JSON populado")
-    void testeExportarParaJson_comJogos() {
+    public void testeExportarParaJson_comJogos() {
         Jogo jogo = new Jogo("Minecraft", "2011", "Sandbox", "PC", "Mojang", "Microsoft");
         when(apiMock.buscarJogoPorNome("Minecraft")).thenReturn(Optional.of(jogo));
         bibliotecaJogo.buscarEAdicionarJogo("Minecraft", apiMock);
@@ -184,7 +184,7 @@ public class BibliotecaJogoTeste {
 
     @Test
     @DisplayName("Deve importar jogos de um arquivo JSON válido")
-    void testeImportarDeJson_comArquivoValido() throws IOException {
+    public void testeImportarDeJson_comArquivoValido() throws IOException {
         String json = """
                 [
                   {
@@ -218,7 +218,7 @@ public class BibliotecaJogoTeste {
 
     @Test
     @DisplayName("Deve permanecer vazia ao tentar importar de um arquivo inexistente")
-    void testImportarDeJson_arquivoInexistente_comMock() {
+    public void testImportarDeJson_arquivoInexistente_comMock() {
 
         String caminhoInvalido = "arquivo_que_nao_existe.json";
         bibliotecaJogo.importarDeJson(caminhoInvalido);

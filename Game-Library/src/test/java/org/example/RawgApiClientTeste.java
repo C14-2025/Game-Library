@@ -32,13 +32,13 @@ class RawgApiClientTeste {
     private RawgApiClient apiClient;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         apiClient = new RawgApiClient("DUMMY_API_KEY", mockClient);
     }
 
     @Test
     @DisplayName("Deve retornar um Jogo quando a API encontra resultados")
-    void buscarJogoPorNome_quandoEncontrado_deveRetornarOptionalComJogo() throws IOException, InterruptedException {
+    public void buscarJogoPorNome_quandoEncontrado_deveRetornarOptionalComJogo() throws IOException, InterruptedException {
         String jsonBusca = """
         {
             "count": 1,
@@ -86,7 +86,7 @@ class RawgApiClientTeste {
 
     @Test
     @DisplayName("Deve retornar Optional vazio quando a API não encontra resultados")
-    void buscarJogoPorNome_quandoNaoEncontrado_deveRetornarOptionalVazio() throws IOException, InterruptedException {
+    public void buscarJogoPorNome_quandoNaoEncontrado_deveRetornarOptionalVazio() throws IOException, InterruptedException {
         String jsonResposta = """
         {
             "count": 0,
@@ -106,7 +106,7 @@ class RawgApiClientTeste {
 
     @Test
     @DisplayName("Deve lançar RuntimeException quando a API retorna erro de status")
-    void buscarJogoPorNome_quandoApiRetornaErro_deveLancarRuntimeException() throws IOException, InterruptedException {
+    public void buscarJogoPorNome_quandoApiRetornaErro_deveLancarRuntimeException() throws IOException, InterruptedException {
         when(mockResponse.statusCode()).thenReturn(500);
 
         when(mockClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class))).thenReturn(mockResponse);
