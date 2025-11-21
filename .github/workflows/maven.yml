@@ -68,3 +68,14 @@ jobs:
         with:
           name: test report
           path: Game-Library/target/site/
+
+  notification:
+    name: Send Notification Email
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Notification
+        run: sh scripts/sendEmail.sh
