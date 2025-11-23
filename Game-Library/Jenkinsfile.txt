@@ -14,6 +14,10 @@ pipeline {
 
         stage('Checkout') {
             steps {
+                echo "Verificando credenciais..."
+                withCredentials([string(credentialsId: 'github-token', variable: 'TOKEN_TEST')]) {
+                    echo "Token encontrado? ${TOKEN_TEST != null}"
+                }
                 echo "Clonando repositório..."
                 checkout([$class: 'GitSCM',
                     branches: [[name: '*/main']],
