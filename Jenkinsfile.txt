@@ -1,0 +1,56 @@
+pipeline {
+    agent any
+
+    tools {
+        jdk 'JDK21'
+        maven 'maven-3.9'
+    }
+
+    environment {
+        GITHUB_TOKEN = credentials('github-token')
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                echo "Clonando repositório..."
+                checkout([$class: 'GitSCM',
+                    branches: [[name: '*/main']],
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/C14-2025/Game-Library.git',
+                        credentialsId: 'github-token'
+                    ]]
+                ])
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo "Executando a build do projeto..."
+                bat "mvn clean package -DskipTests"
+            }
+        }
+
+        stage('Tests') {
+            steps {
+                echo "Executando os testes..."
+                bat "mvn test"
+            }
+            post {
+                always {
+                    junit '**/target/surefire-reports/*.xml'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Pipeline finalizada com sucesso!"
+        }
+        failure {
+            echo "Pipeline falhou!"
+        }
+    }
+}
