@@ -18,14 +18,18 @@ pipeline {
         stage('Build') {
             steps {
                 echo "Executando a build do projeto..."
-                bat "mvn clean package -DskipTests"
+                dir('Game-Library') {
+                    bat "mvn clean package -DskipTests"
+                }
             }
         }
 
         stage('Tests') {
             steps {
                 echo "Executando os testes..."
-                bat "mvn test"
+                dir('Game-Library') {
+                    bat "mvn test"
+                }
             }
             post {
                 always {
