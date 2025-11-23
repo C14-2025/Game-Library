@@ -6,26 +6,12 @@ pipeline {
         maven 'maven-3.9'
     }
 
-    environment {
-        GITHUB_TOKEN = credentials('github-token')
-    }
-
     stages {
 
         stage('Checkout') {
             steps {
-                echo "Verificando credenciais..."
-                withCredentials([string(credentialsId: 'github-token', variable: 'TOKEN_TEST')]) {
-                    echo "Token encontrado? ${TOKEN_TEST != null}"
-                }
                 echo "Clonando repositório..."
-                checkout([$class: 'GitSCM',
-                    branches: [[name: '*/main']],
-                    userRemoteConfigs: [[
-                        url: 'https://github.com/C14-2025/Game-Library.git',
-                        credentialsId: 'github-token'
-                    ]]
-                ])
+                git branch: 'main', url: 'https://github.com/C14-2025/Game-Library.git'
             }
         }
 
