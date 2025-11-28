@@ -1,0 +1,67 @@
+pipeline {
+    agent any
+
+    tools {
+        jdk 'JDK21'
+        maven 'maven-3.9'
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                echo "Clonando repositório..."
+                git branch: 'main', url: 'https://github.com/C14-2025/Game-Library.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo "Executando a build do projeto (sem testes)..."
+                dir('Game-Library') {
+                    bat "mvn clean package -DskipTests"
+                }
+            }
+        }
+
+        stage('Tests & Quality Analysis') {
+            steps {
+                echo "Rodando Testes Unitários e Análise Estática..."
+                dir('Game-Library') {
+                    bat "mvn test checkstyle:check pmd:cpd pmd:pmd spotbugs:check"
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            dir('Game-Library') {
+                junit '**/target/surefire-reports/*.xml'
+
+                recordIssues(
+                    tools: [
+                        checkstyle(pattern: '**/target/checkstyle-result.xml'),
+                        pmdParser(pattern: '**/target/pmd.xml'),
+                        cpd(pattern: '**/target/cpd.xml'), // Copy/Paste Detector
+                        spotBugs(pattern: '**/target/spotbugsXml.xml')
+                    ],
+                    qualityGates: [[threshold: 1, type: 'TOTAL', unstable: true]] // Marca como UNSTABLE se houver 1 erro
+                )
+
+                jacoco(
+                    execPattern: '**/target/jacoco.exec',
+                    classPattern: '**/target/classes',
+                    sourcePattern: '**/src/main/java',
+                    exclusionPattern: '**/src/test*'
+                )
+            }
+        }
+        success {
+            echo "Pipeline finalizada com sucesso!"
+        }
+        failure {
+            echo "Pipeline falhou!"
+        }
+    }
+}
