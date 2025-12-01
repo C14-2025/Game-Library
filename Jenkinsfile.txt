@@ -44,10 +44,10 @@ pipeline {
             }
         }
 
-    stage('Site Report') {
-        steps {
-            echo "Gerando relatório HTML do projeto..."
-            bat "mvn site"
+        stage('Site Report') {
+            steps {
+                echo "Gerando relatório HTML do projeto..."
+                bat "mvn site"
             }
             post {
                 always {
