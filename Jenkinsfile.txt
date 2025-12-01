@@ -44,6 +44,20 @@ pipeline {
             }
         }
 
+    stage('Site Report') {
+        steps {
+            echo "Gerando relatório HTML do projeto..."
+            bat "mvn site"
+            }
+            post {
+                always {
+                    echo "Arquivando relatório HTML para download..."
+                    archiveArtifacts artifacts: 'target/site/**/*', fingerprint: true
+                }
+            }
+        }
+
+
         stage('Deploy') {
             steps {
                 dir('Game-Library') {
