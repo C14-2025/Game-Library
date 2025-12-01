@@ -67,7 +67,7 @@ pipeline {
 
             emailext(
                 subject: "Jenkins - Build Realizada com SUCESSO",
-                to: "lucas.caetano.reis@hotmail.com",
+                to: "lucas.caetano.comercial@gmail.com",
                 body: """\
                     <p>A pipeline do projeto <b>Game-Library</b> foi concluída com <span style='color:green;'><b>sucesso</b></span>.</p>
                     <p>O relatório HTML está disponível no Jenkins, na aba <b>Artifacts</b></p>
@@ -80,7 +80,7 @@ pipeline {
 
             emailext(
                 subject: "Jenkins - Build FRACASSADA",
-                to: "lucas.caetano.reis@hotmail.com",
+                to: "lucas.caetano.comercial@gmail.com",
                 body: """\
                     <p>A pipeline do projeto <b>Game-Library</b> <span style='color:red;'><b>falhou</b></span>.</p>
                     <p>Verifique os logs no Jenkins para detalhes.</p>
