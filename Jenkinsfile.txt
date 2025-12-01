@@ -19,6 +19,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo 'Clonando repositório...'
+                cleanWs()
                 git branch: 'main',
                     url: 'https://github.com/C14-2025/Game-Library.git'
             }
@@ -26,33 +27,43 @@ pipeline {
 
         stage('Build') {
             steps {
-                echo "Compilando o projeto..."
-                bat "mvn clean package -DskipTests"
+                dir('Game-Library') {
+                    echo "Compilando o projeto..."
+                    bat "mvn clean package -DskipTests"
+                }
             }
         }
 
         stage('Tests') {
             steps {
-                echo 'Executando testes...'
-                bat "mvn test"
+                dir('Game-Library') {
+                    echo 'Executando testes...'
+                    bat "mvn test"
+                }
             }
             post {
                 always {
-                    echo "Postando os relatórios xml dos testes"
-                    junit 'target/surefire-reports/*.xml'
+                    dir('Game-Library') {
+                        echo "Postando os relatórios xml dos testes"
+                        junit 'target/surefire-reports/*.xml'
+                    }
                 }
             }
         }
 
         stage('Site Report') {
             steps {
-                echo "Gerando relatório HTML do projeto..."
-                bat "mvn site"
+                dir('Game-Library') {
+                    echo "Gerando relatório HTML do projeto..."
+                    bat "mvn site"
+                }
             }
             post {
                 always {
-                    echo "Arquivando relatório HTML para download..."
-                    archiveArtifacts artifacts: 'target/site/**/*', fingerprint: true
+                    dir('Game-Library') {
+                        echo "Arquivando relatório HTML para download..."
+                        archiveArtifacts artifacts: 'target/site/**/*', fingerprint: true
+                    }
                 }
             }
         }
@@ -65,10 +76,11 @@ pipeline {
                     // Simulação de deploy,
                     // copiando o artefato para um diretório local C:\deploy
                     bat """
-                        bat "mkdir deploy || echo 'pasta já existente'"
-                        bat "copy target\\Game-Library-1.0-SNAPSHOT.jar deploy\\Game-Library.jar"
+                        bat "mkdir C:\\deploy 2>nul"
+                        bat "copy target\\Game-Library-1.0-SNAPSHOT.jar C:\\deploy\\Game-Library.jar"
                     """
                     // mkdir cria o diretório se ele não existir,
+                    // 2>nul suprime a mensagem de erro se o diretório já existir
                     // copy copia o arquivo jar para o diretório de deploy
                 }
             }
@@ -82,7 +94,9 @@ pipeline {
             emailext(
                 subject: "Jenkins - Build Realizada com SUCESSO",
                 to: "lucas.caetano.comercial@gmail.com",
-                body: """\
+                mimeType: 'text/html',
+                body:
+                """
                     <p>A pipeline do projeto <b>Game-Library</b> foi concluída com <span style='color:green;'><b>sucesso</b></span>.</p>
                     <p>O relatório HTML está disponível no Jenkins, na aba <b>Artifacts</b></p>
                 """
@@ -95,7 +109,9 @@ pipeline {
             emailext(
                 subject: "Jenkins - Build FRACASSADA",
                 to: "lucas.caetano.comercial@gmail.com",
-                body: """\
+                mimeType: 'text/html',
+                body:
+                """
                     <p>A pipeline do projeto <b>Game-Library</b> <span style='color:red;'><b>falhou</b></span>.</p>
                     <p>Verifique os logs no Jenkins para detalhes.</p>
                 """
