@@ -75,10 +75,8 @@ pipeline {
                     echo "Executando deploy local..."
                     // Simulação de deploy,
                     // copiando o artefato para um diretório local C:\deploy
-                    bat """
-                        bat "mkdir C:\\deploy 2>nul"
-                        bat "copy target\\Game-Library-1.0-SNAPSHOT.jar C:\\deploy\\Game-Library.jar"
-                    """
+                    bat "mkdir C:\\deploy 2>nul"
+                    bat "copy target\\Game-Library-1.0-SNAPSHOT.jar C:\\deploy\\Game-Library.jar"
                     // mkdir cria o diretório se ele não existir,
                     // 2>nul suprime a mensagem de erro se o diretório já existir
                     // copy copia o arquivo jar para o diretório de deploy
