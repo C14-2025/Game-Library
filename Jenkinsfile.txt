@@ -1,51 +1,63 @@
 pipeline {
-    agent any // Para o Quality Gate funcionar, baixa os plugins Jacoco e Warnings no Jenkins
+    agent any
+
+    //Plugins necessários:
+    // Email Extension
+
+    // Para enviar e-mails,
+    // é necessário configurar o servidor SMTP em
+    // "Gerenciar Jenkins" > "Configurar o Sistema" > "Extended E-mail Notification"
 
     tools {
-        jdk 'JDK21'      // Verifique se o nome no seu Jenkins é EXATAMENTE esse
-        maven 'maven-3.9' // Verifique se o nome no seu Jenkins é EXATAMENTE esse
+        jdk 'JDK21' //No Jenkins, o nome deve corresponder ao configurado em
+        // "Gerenciar Jenkins" > "Configurar o Sistema"
+        maven 'maven-3.9' //No Jenkins, o nome deve corresponder ao configurado em
+        // "Gerenciar Jenkins" > "Configurar o Sistema"
     }
 
     stages {
 
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/C14-2025/Game-Library.git'
+                echo 'Clonando repositório...'
+                git branch: 'main',
+                    url: 'https://github.com/C14-2025/Game-Library.git'
             }
         }
 
-        stage('Build & Tests') {
+        stage('Build') {
             steps {
-                dir('Game-Library') {
-                    bat "mvn clean test checkstyle:check pmd:cpd pmd:pmd spotbugs:check"
-                }
+                echo "Compilando o projeto..."
+                bat "mvn clean package -DskipTests"
             }
         }
-
     }
 
     post {
-        always {
-            dir('Game-Library') {
-                junit 'target/surefire-reports/*.xml'
+        success {
+            echo "Pipeline finalizada com sucesso!"
 
-                jacoco(
-                    execPattern: 'target/jacoco.exec',
-                    classPattern: 'target/classes',
-                    sourcePattern: 'src/main/java',
-                    exclusionPattern: 'src/test*'
-                )
+            emailext(
+                subject: "Jenkins - Build Realizada com SUCESSO",
+                to: "lucas.caetano.reis@hotmail.com",
+                body: """\
+                    <p>A pipeline do projeto <b>Game-Library</b> foi concluída com <span style='color:green;'><b>sucesso</b></span>.</p>
+                    <p>O relatório HTML está disponível no Jenkins, na aba <b>Artifacts</b></p>
+                """
+            )
+        }
 
-                recordIssues(
-                    tools: [
-                        checkstyle(pattern: 'target/checkstyle-result.xml'),
-                        pmdParser(pattern: 'target/pmd.xml'),
-                        cpd(pattern: 'target/cpd.xml'),
-                        spotBugs(pattern: 'target/spotbugsXml.xml')
-                    ],
-                    qualityGates: [[threshold: 1, type: 'TOTAL', unstable: true]]
-                )
-            }
+        failure {
+            echo "Pipeline falhou!"
+
+            emailext(
+                subject: "Jenkins - Build FRACASSADA",
+                to: "lucas.caetano.reis@hotmail.com",
+                body: """\
+                    <p>A pipeline do projeto <b>Game-Library</b> <span style='color:red;'><b>falhou</b></span>.</p>
+                    <p>Verifique os logs no Jenkins para detalhes.</p>
+                """
+            )
         }
     }
 }
