@@ -3,16 +3,15 @@ pipeline {
 
     //Plugins necessários:
     // Email Extension
+    // JUnit Plugin
 
     // Para enviar e-mails,
     // é necessário configurar o servidor SMTP em
     // "Gerenciar Jenkins" > "Configurar o Sistema" > "Extended E-mail Notification"
 
     tools {
-        jdk 'JDK21' //No Jenkins, o nome deve corresponder ao configurado em
-        // "Gerenciar Jenkins" > "Configurar o Sistema"
-        maven 'maven-3.9' //No Jenkins, o nome deve corresponder ao configurado em
-        // "Gerenciar Jenkins" > "Configurar o Sistema"
+        jdk 'JDK21' //No Jenkins, o nome deve corresponder ao configurado em "Gerenciar Jenkins" > "Configurar o Sistema"
+        maven 'maven-3.9' //No Jenkins, o nome deve corresponder ao configurado em "Gerenciar Jenkins" > "Configurar o Sistema"
     }
 
     stages {
@@ -31,8 +30,21 @@ pipeline {
                 bat "mvn clean package -DskipTests"
             }
         }
-    }
-            stage('Deploy') {
+
+        stage('Tests') {
+            steps {
+                echo 'Executando testes...'
+                bat "mvn test"
+            }
+            post {
+                always {
+                    echo "Postando os relatórios xml dos testes"
+                    junit 'target/surefire-reports/*.xml'
+                }
+            }
+        }
+
+        stage('Deploy') {
             steps {
                 dir('Game-Library') {
                     echo "Executando deploy local..."
@@ -48,6 +60,7 @@ pipeline {
             }
         }
     }
+
     post {
         success {
             echo "Pipeline finalizada com sucesso!"
