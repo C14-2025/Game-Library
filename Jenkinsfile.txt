@@ -32,7 +32,22 @@ pipeline {
             }
         }
     }
-
+            stage('Deploy') {
+            steps {
+                dir('Game-Library') {
+                    echo "Executando deploy local..."
+                    // Simulação de deploy,
+                    // copiando o artefato para um diretório local C:\deploy
+                    bat """
+                        bat "mkdir deploy || echo 'pasta já existente'"
+                        bat "copy target\\Game-Library-1.0-SNAPSHOT.jar deploy\\Game-Library.jar"
+                    """
+                    // mkdir cria o diretório se ele não existir,
+                    // copy copia o arquivo jar para o diretório de deploy
+                }
+            }
+        }
+    }
     post {
         success {
             echo "Pipeline finalizada com sucesso!"
