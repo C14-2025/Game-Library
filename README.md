@@ -53,11 +53,11 @@ Por meio de uma API chamada RAWG, o sistema permite registrar informações sobr
 
 # Estrutura do projeto:
 
-├── .github/           # Configurações de workflows e CI/CD para o Github Actions
-├── Game-Library/      # Diretório principal, contendo o código fonte, testes, arquivos de dependências, relatórios e um executável .JAR
-├── scripts/           # Scripts para notificação por e-mail para o Github Actions
-├── Jenkinsfile.txt    # Pipeline oficial do projeto
-├── README.md          # Documentação do projeto
+- .github/           # Configurações de workflows e CI/CD para o Github Actions
+- Game-Library/      # Diretório principal, contendo o código fonte, testes, arquivos de dependências, relatórios e um executável .JAR
+- scripts/           # Scripts para notificação por e-mail para o Github Actions
+- Jenkinsfile.txt    # Pipeline oficial do projeto
+- README.md          # Documentação do projeto
 
 # Como executar o projeto:
 
