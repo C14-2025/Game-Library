@@ -6,10 +6,10 @@ Uma aplicação desenvolvida em **Java** que funciona como uma **biblioteca virt
 
 # Desenvolvido por:
 
-Lucas Caetano Reis - 1953 - GEC
-Vinícus Heringer
-Bissacot
-Eduardo Souza
+- Lucas Caetano Reis - 1953 - GEC
+- Vinícus Heringer
+- Bissacot
+- Eduardo Souza
 
 ---
 
@@ -28,13 +28,13 @@ Por meio de uma API chamada RAWG, o sistema permite registrar informações sobr
 
 # Funcionalidades:
 
-Cadastro de jogos
+- Cadastro de jogos
 
-Listagem de jogos registrados
+- Listagem de jogos registrados
 
-Consulta por título
+- Consulta por título
 
-Atualização e exclusão de registros
+- Atualização e exclusão de registros
 
 ---
 
@@ -61,32 +61,32 @@ Atualização e exclusão de registros
 
 # Como executar o projeto:
 
-Ter o Java JDK 21 instalado na sua máquina
+- Ter o Java JDK 21 instalado na sua máquina
 
-Ter uma IDE compatível (ex: IntelliJ IDEA)
+- Ter uma IDE compatível (ex: IntelliJ IDEA)
 
-Usar o Git para clonar o repositório na sua máquina:
+- Usar o Git para clonar o repositório na sua máquina:
 
-git clone https://github.com/C14-2025/Game-Library.git
+- git clone https://github.com/C14-2025/Game-Library.git
 
-Abra o projeto na sua IDE.
+- Abra o projeto na sua IDE.
 
-Compile e execute o arquivo main.java.
+- Compile e execute o arquivo main.java.
 
-O sistema abrirá um terminal para cadastrar e visualizar os dados dos jogos.
+- O sistema abrirá um terminal para cadastrar e visualizar os dados dos jogos.
 
 ---
 
 # Como gerar o relatório de testes:
 
-Tenha o maven 3.9 instalado na sua máquina.
+- Tenha o maven 3.9 instalado na sua máquina.
 
-Abra um prompt de comando e dê entre no nível do seu pom.xl.
+- Abra um prompt de comando e dê entre no nível do seu pom.xl.
 
-Rode os comandos:
-mvn clean install -DskipTests
-mvn test site
+- Rode os comandos:
+- mvn clean install -DskipTests
+- mvn test site
 
-Vá na pasta target, entre no diretório site e abra o arquivo summmary.html
+- Vá na pasta target, entre no diretório site e abra o arquivo summmary.html
 
 ---
